@@ -1,0 +1,36 @@
+version: 'latest'
+services:
+  postgres:
+    image: postgres
+    networks:
+      - example
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=mikita
+      - POSTGRES_PASSWORD=123
+      - POSTGRES_DB=users
+    volumes:
+      - db-data:/etc/data
+  pgadmin:
+    image: dpage/pgadmin4
+    networks:
+      - example
+    ports:
+      - 4001:80
+    environment:
+      - PGADMIN_DEFAULT_PASSWORD=123
+      - PGADMIN_DEFAULT_EMAIL=papokmikita@gmail.com
+  nest:
+    image: nestjs-api
+    ports:
+      - 3200:3000
+    depends_on:
+      - postgres
+    networks:
+      - example
+networks:
+  example:
+    driver: bridge
+volumes:
+  db-data:
